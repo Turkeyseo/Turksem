@@ -1,0 +1,56 @@
+<?php
+/**
+ * Plugin Name: SEO External Links Lister
+ * Plugin URI: https://www.turksem.com/external-links-plugin
+ * Description: Lists all external links on the site with pagination.
+ * Version: 1.1
+ * Requires at least: 5.8
+ * Requires PHP: 7.3
+ * Code Name: Celal Dinc
+ * Author: Turk SEM
+ * Author URI: https://www.turksem.com
+ * Licence: GPLv2 or later
+ *
+ * Copyright 2003 -2024 Turk SEM
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
+define( 'SELL_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
+define( 'SELL_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+
+// Enqueue styles
+function sell_enqueue_styles() {
+    wp_enqueue_style( 'sell-styles', SELL_PLUGIN_URL . 'css/styles.css' );
+}
+add_action( 'admin_enqueue_scripts', 'sell_enqueue_styles' );
+
+// Include functions
+require_once SELL_PLUGIN_PATH . 'includes/functions.php';
+
+// Add admin menu
+function sell_add_admin_menu() {
+    add_menu_page(
+        'SEO External Links Lister',
+        'External Links',
+        'manage_options',
+        'seo-external-links-lister',
+        'sell_display_links',
+        'dashicons-admin-links',
+        20
+    );
+}
+add_action( 'admin_menu', 'sell_add_admin_menu' );
+
+function sell_display_links() {
+    echo '<div class="wrap">';
+    echo '<h1>SEO External Links Lister</h1>';
+    echo '<form method="post">';
+    echo '<input type="submit" name="sell_rescan" value="Rescan" class="button button-primary">';
+    echo '</form>';
+    sell_list_external_links();
+    echo '<p class="turksem-credit">This plugin is developed by <a href="https://turksem.com" target="_blank">Turksem.com</a></p>';
+    echo '</div>';
+}
